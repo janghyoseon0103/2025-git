@@ -10,25 +10,45 @@ const chatLog = document.getElementById('chat-log'),
 //addEventListener
 sendButton.addEventListener('click', sendMessage);
 
-//3. sendMessage 함수 정의하기
-function sendMessage() {
-		//userInput에 있는 값을 message 변수에 저장하기
-    const message = userInput.value.trim(); //trim: 앞뒤에 있는 공백 제거하는 함수
+userInput.addEventListener('keydown', (event) => {
+    if(event.key === 'Enter') {
+        sendMessage();
+    }
+});
+async function sendMessage() {
+    const message = userInput.value.trim();
 
     if (message === '') {
         return
     }
-    else { //message가 비어있지 않다면
-        //user의 message를 받아 appendMessage 함수 실행
-        appendMessage('user', message);
-        //1초 후 bot에서 appendMessage 실행
-        setTimeout(() => {
-            //api에서 연결 후 수정할거에용
-            appendMessage('bot', 'Made By Suyeon\n')
-            butttonIcon.classList.add('fa-solid', 'fa-paper-plane');
-            butttonIcon.classList.remove('fas', 'fa-spinner', 'fa-pulse');
-        }, 1000);
-        return
+    appendMessage('user', message);
+    userInput.value = '';
+
+    const options = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            Authorization: `Bearer ${API_KEY}`,
+        },
+        body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: message }],
+            max_tokens: 100,
+        }),
+    };
+
+    try {
+        await fetch(API_URL, options)
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response);
+                appendMessage('bot', response);
+                butttonIcon.classList.add('fa-solid', 'fa-paper-plane');
+                butttonIcon.classList.remove('fas', 'fa-spinner', 'fa-pulse');
+            })
+    } catch(error) {
+        console.error("Error: ", error);
+        appendMessage('bot', `Error: ${error}`);
     }
 }
 
@@ -69,3 +89,5 @@ function appendMessage(sender, message) { //sender는 user나 bot
     chatLog.appendChild(chatElement);
 }
 
+const API_URL = "https://api.openai.com/v1/chat/completions";
+const API_KEY = "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";
