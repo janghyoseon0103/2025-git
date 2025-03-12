@@ -88,6 +88,3 @@ function appendMessage(sender, message) { //sender는 user나 bot
     chatElement.appendChild(messageElement);
     chatLog.appendChild(chatElement);
 }
-
-const API_URL = "https://api.openai.com/v1/chat/completions";
-const API_KEY = "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";
