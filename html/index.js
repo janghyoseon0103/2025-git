@@ -10,45 +10,25 @@ const chatLog = document.getElementById('chat-log'),
 //addEventListener
 sendButton.addEventListener('click', sendMessage);
 
-userInput.addEventListener('keydown', (event) => {
-    if(event.key === 'Enter') {
-        sendMessage();
-    }
-});
-async function sendMessage() {
-    const message = userInput.value.trim();
+//3. sendMessage 함수 정의하기
+function sendMessage() {
+		//userInput에 있는 값을 message 변수에 저장하기
+    const message = userInput.value.trim(); //trim: 앞뒤에 있는 공백 제거하는 함수
 
     if (message === '') {
         return
     }
-    appendMessage('user', message);
-    userInput.value = '';
-
-    const options = {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            Authorization: `Bearer ${API_KEY}`,
-        },
-        body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: message }],
-            max_tokens: 100,
-        }),
-    };
-
-    try {
-        await fetch(API_URL, options)
-            .then((response) => response.json())
-            .then((response) => {
-                console.log(response);
-                appendMessage('bot', response);
-                butttonIcon.classList.add('fa-solid', 'fa-paper-plane');
-                butttonIcon.classList.remove('fas', 'fa-spinner', 'fa-pulse');
-            })
-    } catch(error) {
-        console.error("Error: ", error);
-        appendMessage('bot', `Error: ${error}`);
+    else { //message가 비어있지 않다면
+        //user의 message를 받아 appendMessage 함수 실행
+        appendMessage('user', message);
+        //1초 후 bot에서 appendMessage 실행
+        setTimeout(() => {
+            //api에서 연결 후 수정할거에용
+            appendMessage('bot', 'Made By Hyoseon\n')
+            butttonIcon.classList.add('fa-solid', 'fa-paper-plane');
+            butttonIcon.classList.remove('fas', 'fa-spinner', 'fa-pulse');
+        }, 1000);
+        return
     }
 }
 
