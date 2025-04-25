@@ -24,7 +24,7 @@ function sendMessage() {
         //1초 후 bot에서 appendMessage 실행
         setTimeout(() => {
             //api에서 연결 후 수정할거에용
-            appendMessage('bot', 'Made By Suyeon\n')
+            appendMessage('bot', 'Made By Hyoseon\n')
             butttonIcon.classList.add('fa-solid', 'fa-paper-plane');
             butttonIcon.classList.remove('fas', 'fa-spinner', 'fa-pulse');
         }, 1000);
@@ -68,4 +68,3 @@ function appendMessage(sender, message) { //sender는 user나 bot
     chatElement.appendChild(messageElement);
     chatLog.appendChild(chatElement);
 }
-
